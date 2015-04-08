@@ -269,8 +269,8 @@ class OpenIDConnectClient
 
         return $this->providerConfig[$param];
     }
-    
-    
+
+
     /**
      * @param $url Sets redirect URL for auth flow
      */
@@ -286,7 +286,7 @@ class OpenIDConnectClient
      * @return string
      */
     public function getRedirectURL() {
-        
+
         // If the redirect URL has been set then return it.
         if (property_exists($this, 'redirectURL') && $this->redirectURL) {
             return $this->redirectURL;
@@ -465,9 +465,14 @@ class OpenIDConnectClient
      */
     private function verifyJWTclaims($claims) {
 
+      if(isset($claims->nonce)) {
         return (($claims->iss == $this->getProviderURL())
             && (($claims->aud == $this->clientID) || (in_array($this->clientID, $claims->aud)))
             && ($claims->nonce == $_SESSION['openid_connect_nonce']));
+      } else {
+        return (($claims->iss == $this->getProviderURL())
+            && (($claims->aud == $this->clientID) || (in_array($this->clientID, $claims->aud))));
+      }
 
     }
 
